@@ -16,6 +16,7 @@ class Bot extends EventEmitter {
     this.token = opts.token
     this.app_secret = opts.app_secret || false
     this.verify_token = opts.verify || false
+    this.disable_integrity = opts.disable_integrity || false
   }
 
   getProfile (id, cb) {
@@ -74,7 +75,7 @@ class Bot extends EventEmitter {
 
       req.on('end', () => {
         // check message integrity
-        if (this.app_secret && this.check_integrity) {
+        if (this.app_secret && !this.disable_integrity) {
           let hmac = crypto.createHmac('sha1', this.app_secret)
           hmac.update(body)
 
