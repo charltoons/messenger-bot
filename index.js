@@ -74,7 +74,7 @@ class Bot extends EventEmitter {
 
       req.on('end', () => {
         // check message integrity
-        if (this.app_secret) {
+        if (this.app_secret && this.check_integrity) {
           let hmac = crypto.createHmac('sha1', this.app_secret)
           hmac.update(body)
 
