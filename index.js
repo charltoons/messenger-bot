@@ -63,6 +63,7 @@ class Bot extends EventEmitter {
     return (req, res) => {
       // we always write 200, otherwise facebook will keep retrying the request
       res.writeHead(200, { 'Content-Type': 'application/json' })
+      console.log(req.url, req.method)
       if (req.url === '/_status') return res.end(JSON.stringify({status: 'ok'}))
       if (this.verify_token && req.method === 'GET') return this._verify(req, res)
       if (req.method !== 'POST') return res.end()
