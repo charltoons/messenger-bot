@@ -17,6 +17,7 @@ class Bot extends EventEmitter {
     this.app_secret = opts.app_secret || false
     this.verify_token = opts.verify || false
     this.disable_integrity = opts.disable_integrity || false
+    this.profile_fields = opts.profile_fields || 'first_name,last_name,profile_pic'
   }
 
   getProfile (id, cb) {
@@ -26,7 +27,7 @@ class Bot extends EventEmitter {
       method: 'GET',
       uri: `https://graph.facebook.com/v2.6/${id}`,
       qs: {
-        fields: 'first_name,last_name,profile_pic',
+        fields: this.profile_fields,
         access_token: this.token
       },
       json: true
@@ -63,7 +64,6 @@ class Bot extends EventEmitter {
     return (req, res) => {
       // we always write 200, otherwise facebook will keep retrying the request
       res.writeHead(200, { 'Content-Type': 'application/json' })
-      console.log(req.url, req.method)
       if (req.url === '/_status') return res.end(JSON.stringify({status: 'ok'}))
       if (this.verify_token && req.method === 'GET') return this._verify(req, res)
       if (req.method !== 'POST') return res.end()
